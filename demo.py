@@ -9,6 +9,7 @@ Copyright (C):         2020 All rights reserved
 
 from tkinter import *
 import tkinter.messagebox as messagebox
+import _thread
 import re
 
 class Demo(Tk):
@@ -42,7 +43,9 @@ class Demo(Tk):
 
         self.entrynum = Entry(frame, textvariable=self._get_num_)
         self.entrynum.grid(row=1, column=1)
-        getname = Button(frame, text='确定', command=self.calculate_factor)
+        # getname = Button(frame, text='确定', command= lambda: self.thread_calculate_factor())
+        getname = Button(frame, text='确定', command= lambda: self.calculate_factor())
+
         getname.grid(row=1, column=2)
 
         self.listbox = Listbox(self)
@@ -54,32 +57,28 @@ class Demo(Tk):
         # 容器框 （LabelFrame）
         label_frame = Frame(self)
         label_frame.pack(fill = Y)
-        group = LabelFrame(label_frame, text="Hello", padx=5, pady=5)
+        group = LabelFrame(label_frame, text="Ps.", padx=5, pady=5)
         group.grid(pady=10)
         w = Label(group, text='本学习项目由  http://pegasu.cn  出品 \n\nGithub: https://github.com/thenicewiki')
         w.pack()
 
+    def thread_calculate_factor(self):
+        _thread.start_new_thread(self.calculate_factor, ())
+
     def calculate_factor(self):
-        i = 2
         lst = []
-        
         read = re.findall('\d+', self._get_num_.get())
         if read == []:
             messagebox.showwarning('警告','无效的输入！') 
             return
-
         num = int(read[0])
-        print(num)
-
-
         if num == 0:
             messagebox.showinfo('提示','0 不是质数') 
             return
         elif num == 1:
             messagebox.showinfo('提示','1 不是质数') 
             return
-
-        # self.entrynum.delete(0, END)
+        self.entrynum.delete(0, END) # 输入后删除输入框内的内容
 
         # while num > 1:
         #     if num % i == 0:
@@ -94,15 +93,13 @@ class Demo(Tk):
                     lst.append(str(i))
                     break
 
-        
-
         if len(lst) == 1:
             print('您输入的数字是质数！')
             self.listbox.insert(END, read[0] + ' 是质数')
             self.listbox.yview_moveto(1)
             return
-
-        factor_nums = " × ".join([ str(i) for i in lst])
+        
+        factor_nums = " × ".join([ str(i) for i in lst]) # 字符串拼接
 
         self.listbox.insert(END, read[0] + ' = ' +factor_nums)
         self.listbox.yview_moveto(1)
