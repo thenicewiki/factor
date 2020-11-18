@@ -71,10 +71,8 @@ class Demo(Tk):
         num = int(read[0])
         print(num)
 
-        if num > 10000000000:
-            messagebox.showinfo('建议','请在 天河一号 运行本程序！') 
-            return
-        elif num == 0:
+
+        if num == 0:
             messagebox.showinfo('提示','0 不是质数') 
             return
         elif num == 1:
@@ -83,12 +81,20 @@ class Demo(Tk):
 
         # self.entrynum.delete(0, END)
 
+        # while num > 1:
+        #     if num % i == 0:
+        #         lst.append(i)
+        #         num /= i
+        #     else:
+        #         i+=
         while num > 1:
-            if num % i == 0:
-                lst.append(i)
-                num /= i
-            else:
-                i+=1
+            for i in range(2, num + 1):
+                if num % i == 0:
+                    num //= i
+                    lst.append(str(i))
+                    break
+
+        
 
         if len(lst) == 1:
             print('您输入的数字是质数！')
